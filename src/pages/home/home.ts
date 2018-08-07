@@ -6,6 +6,10 @@ import {HttpHeaders} from '@angular/common/http';
 import {ScheduleData} from "../../providers/schedule-data";
 import {AlertController} from "ionic-angular";
 import {Md5} from 'ts-md5/dist/md5';
+import {EventParser} from "../../providers/EventParser";
+import {ModalController} from "ionic-angular";
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-home',
@@ -15,17 +19,66 @@ export class HomePage {
 
   private _schedule;
 
+  eventSource = [];
+  viewTitle: string;
+  selectedDay = new Date();
+
+  calendar = {
+    mode: 'month',
+    currentDate: new Date()
+  };
+
   constructor(public navCtrl: NavController,
               public http: HttpClient,
               public dataService: ScheduleData,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              public eventService: EventParser,
+              private modalCtrl: ModalController) {
 
   }
 
+  onViewTitleChanged(title) {
+    this.viewTitle = title;
+  }
+
+  onEventSelected(event) {
+    let start = moment(event.startTime).format('LLLL');
+    let end = moment(event.endTime).format('LLLL');
+
+    let alert = this.alertCtrl.create({
+      title: '' + event.title,
+      subTitle: 'From: ' + start + '<br>To: ' + end,
+      buttons: ['OK']
+    })
+    alert.present();
+  }
+
+  onTimeSelected(ev) {
+    this.selectedDay = ev.selectedTime;
+  }
+
+addEvent(){
+
+//  let eventData =  this.eventService.parseEvents(this._schedule);
+
+//  eventData.startTime = new Date(eventData.startTime);
+//  eventData.endTime = new Date(eventData.endTime);
+
+  //let events = this.eventSource;
+  //events.push( eventData);
+  this.eventSource = [];
+  setTimeout(() => {
+    this.eventSource = this.eventService.parseEvents(this._schedule);
+  });
+}
+
+
+
   clearStorage() {
 
+
     var localHash = Md5.hashStr("Test");
-    window.localStorage.clear()
+    //window.localStorage.clear()
   }
 
   onNewUser() {

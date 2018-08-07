@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
-      Testanwendung
+      {{viewTitle}}
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="onNewUser()">
@@ -14,8 +14,24 @@
 <ion-content padding>
 
   <ion-item-group>
-    <button ion-button (click)="clearStorage()">
+
+    <calendar [eventSource]="eventSource"
+              [calendarMode]="calendar.mode"
+              [currentDate]="calendar.currentDate"
+              (onEventSelected)="onEventSelected($event)"
+              (onTitleChanged)="onViewTitleChanged($event)"
+              (onTimeSelected)="onTimeSelected($event)"
+              step="30"
+              class="calendar">
+    </calendar>
+
+    <button ion-button block (click)="clearStorage()">
       Speicher leeren
+    </button>
+
+
+    <button ion-button block (click)="addEvent()">
+      Add Event
     </button>
   </ion-item-group>
 
