@@ -8,21 +8,25 @@ export class EventParser {
   }
 
   parseEvents(schedule){
-
     let events = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < schedule.length; i++) {
+
+      var test = schedule[i];
 
       let event = {
-        startTime: new Date()
-        , endTime: new Date()
-        , allDay: false
-        , title: ''
+        allDay: test["allDay"],
+        color: test["color"],
+        title: test["description"],
+        startTime: new Date(<number>test["start"] * 1000),
+        endTime: new Date((<number>test["end"] * 1000)),
+        room: test["room"],
+        sroom: test["sroom"],
+        description: test["title"],
+        sinstructor: test["sinstructor"]
       };
 
-      event.startTime = new Date("August 6, 2018 1" + i +":00:00");
-      event.endTime = new Date("August 6, 2018 1" + i + ":00:00");
-      event.title = 'Test' + i;
+      var date = new Date(1483945200 * 1000);
 
       events.push( event);
     }

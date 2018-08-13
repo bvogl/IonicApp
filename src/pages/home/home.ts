@@ -25,7 +25,7 @@ export class HomePage {
 
   calendar = {
     mode: 'month',
-    currentDate: new Date()
+    currentDate: this.selectedDay
   };
 
   constructor(public navCtrl: NavController,
@@ -42,12 +42,14 @@ export class HomePage {
   }
 
   onEventSelected(event) {
-    let start = moment(event.startTime).format('LLLL');
-    let end = moment(event.endTime).format('LLLL');
+    let start = moment(event.startTime).format('HH:mm');
+    let end = moment(event.endTime).format('HH:mm');
 
     let alert = this.alertCtrl.create({
-      title: '' + event.title,
-      subTitle: 'From: ' + start + '<br>To: ' + end,
+      title: event.title,
+      message: "Zeit: " + start + ' - ' + end +
+        "<br>Raum: " + event.room +
+        "<br>Dozent: " + event.sinstructor,
       buttons: ['OK']
     })
     alert.present();
@@ -59,13 +61,6 @@ export class HomePage {
 
 addEvent(){
 
-//  let eventData =  this.eventService.parseEvents(this._schedule);
-
-//  eventData.startTime = new Date(eventData.startTime);
-//  eventData.endTime = new Date(eventData.endTime);
-
-  //let events = this.eventSource;
-  //events.push( eventData);
   this.eventSource = [];
   setTimeout(() => {
     this.eventSource = this.eventService.parseEvents(this._schedule);
@@ -75,7 +70,6 @@ addEvent(){
 
 
   clearStorage() {
-
 
     var localHash = Md5.hashStr("Test");
     //window.localStorage.clear()
@@ -112,16 +106,16 @@ addEvent(){
         this.presentScheduleAlert();
       else {
 
+        this._schedule = schedule;
         // Stundenplan anzeigen
-
         this.checkForUpdates();
 
-        this.showSchedule(schedule);
+        this.showSchedule();
       }
     }
   }
 
-  showSchedule(schedule) {
+  showSchedule() {
     console.log('Showing schedule');
   }
 
