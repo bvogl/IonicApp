@@ -26,8 +26,6 @@ export class EventParser {
         sinstructor: test["sinstructor"]
       };
 
-      var date = new Date(1483945200 * 1000);
-
       events.push( event);
     }
 

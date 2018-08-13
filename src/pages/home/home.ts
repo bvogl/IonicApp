@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {NewPage} from "../new/new";
+import {LoginPage} from "../login/login";
 import {HttpClient} from '@angular/common/http';
-import {HttpHeaders} from '@angular/common/http';
 import {ScheduleData} from "../../providers/schedule-data";
 import {AlertController} from "ionic-angular";
 import {Md5} from 'ts-md5/dist/md5';
@@ -26,70 +25,15 @@ export class HomePage {
   calendar = {
     mode: 'month',
     currentDate: this.selectedDay
+
   };
 
   constructor(public navCtrl: NavController,
               public http: HttpClient,
               public dataService: ScheduleData,
               private alertCtrl: AlertController,
-              public eventService: EventParser,
-              private modalCtrl: ModalController) {
+              public eventService: EventParser) {
 
-  }
-
-  onViewTitleChanged(title) {
-    this.viewTitle = title;
-  }
-
-  onEventSelected(event) {
-    let start = moment(event.startTime).format('HH:mm');
-    let end = moment(event.endTime).format('HH:mm');
-
-    let alert = this.alertCtrl.create({
-      title: event.title,
-      message: "Zeit: " + start + ' - ' + end +
-        "<br>Raum: " + event.room +
-        "<br>Dozent: " + event.sinstructor,
-      buttons: ['OK']
-    })
-    alert.present();
-  }
-
-  onTimeSelected(ev) {
-    this.selectedDay = ev.selectedTime;
-  }
-
-addEvent(){
-
-  this.eventSource = [];
-  setTimeout(() => {
-    this.eventSource = this.eventService.parseEvents(this._schedule);
-  });
-}
-
-
-
-  clearStorage() {
-
-    var localHash = Md5.hashStr("Test");
-    //window.localStorage.clear()
-  }
-
-  onNewUser() {
-
-    this.navCtrl.push(NewPage);
-  }
-
-  checkForUpdates(){
-    if (this._schedule == null)
-      this._schedule = this.dataService.getLocalSchedule();
-
-    var localHash = Md5.hashStr(JSON.stringify(this._schedule));
-    var remoteHash = this.dataService.getRemoteHash();
-
-    if (localHash != remoteHash){
-      this.presentUpdateAlert();
-    }
   }
 
   ionViewDidEnter() {
@@ -108,11 +52,76 @@ addEvent(){
 
         this._schedule = schedule;
         // Stundenplan anzeigen
-        this.checkForUpdates();
+
+        if (this.checkForUpdates() == true)
+        {
+          this.presentUpdateAlert();
+        }
 
         this.showSchedule();
       }
     }
+  }
+
+
+  onViewTitleChanged(title) {
+    this.viewTitle = title;
+  }
+
+  onEventSelected(event) {
+    let start = moment(event.startTime).format('HH:mm');
+    let end = moment(event.endTime).format('HH:mm');
+
+    let alert = this.alertCtrl.create({
+      title: event.title,
+      message:
+        "Zeit: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + start + ' - ' + end + "<br>" +
+        "Raum: &nbsp;&nbsp;" + event.room + "<br>" +
+        "Dozent: " + event.sinstructor,
+      buttons: ['OK']
+    })
+    alert.present();
+  }
+
+  onTimeSelected(ev) {
+    this.selectedDay = ev.selectedTime;
+  }
+
+loadEvents(){
+
+  this.eventSource = [];
+
+  var events = this.eventService.parseEvents(this._schedule);
+
+  setTimeout(() => {
+    this.eventSource = events;
+  });
+}
+
+  clearStorage() {
+
+    window.localStorage.clear()
+  }
+
+  onNewUser() {
+
+    this.navCtrl.push(LoginPage);
+  }
+
+  checkForUpdates(){
+   var needsUpdate = false;
+
+    if (this._schedule == null)
+      this._schedule = this.dataService.getLocalSchedule();
+
+    var localHash = Md5.hashStr(JSON.stringify(this._schedule));
+    var remoteHash = this.dataService.getRemoteHash();
+
+    if (localHash != remoteHash){
+      needsUpdate = true;
+    }
+
+    return needsUpdate;
   }
 
   showSchedule() {
@@ -120,7 +129,7 @@ addEvent(){
   }
 
   saveSchedule(schedule) {
-    console.log('Stroring new Schedule locally');
+    console.log('Stroring login Schedule locally');
 
     if (schedule != null) {
       window.localStorage.setItem('Array', JSON.stringify(schedule));
@@ -177,7 +186,7 @@ addEvent(){
         {
           text: 'Ok',
           handler: () => {
-            this.navCtrl.push(NewPage);
+            this.navCtrl.push(LoginPage);
           }
         }
       ]
@@ -188,7 +197,7 @@ addEvent(){
   presentUpdateAlert() {
 
     let alert = this.alertCtrl.create({
-      title: 'Ihr Stundenplan wurde geändert',
+      title: 'Ihr Stundenplan wurde aktualisiert',
       message: 'Es wurde eine Änderung an ihrem Stundenplan festgestellt. ' +
         'Möchten Sie die Änderungen laden?',
       buttons: [

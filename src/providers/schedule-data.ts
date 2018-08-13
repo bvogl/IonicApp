@@ -12,15 +12,19 @@ export class ScheduleData {
 
 
   getRemoteData(){
-    this.http.get('https://api.github.com/users/seeschweiler')
+    this.http.get('')
       .subscribe(data => {
       console.log(data);
-
-      return true;
     });
+    return true;
   }
 
   getRemoteHash(){
+
+    this.http.get('')
+      .subscribe(data => {
+        console.log(data);
+      });
 
     return 'dasdas';
   }

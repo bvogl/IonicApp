@@ -7,7 +7,7 @@ import { IonicStorageModule } from '@ionic/storage';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import {NewPage} from "../pages/new/new";
+import {LoginPage} from "../pages/login/login";
 import {HttpClientModule} from "@angular/common/http";
 import {ScheduleData} from "../providers/schedule-data";
 import {EventParser} from "../providers/EventParser";
@@ -18,7 +18,7 @@ import { NgCalendarModule  } from 'ionic2-calendar';
   declarations: [
     MyApp,
     HomePage,
-    NewPage
+    LoginPage
   ],
   imports: [
     NgCalendarModule,
@@ -35,7 +35,7 @@ import { NgCalendarModule  } from 'ionic2-calendar';
   entryComponents: [
     MyApp,
     HomePage,
-    NewPage
+    LoginPage
   ],
   providers: [
     StatusBar,

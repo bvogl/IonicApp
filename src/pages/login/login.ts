@@ -8,9 +8,9 @@ import {AlertController} from "ionic-angular";
 @IonicPage()
 @Component({
   selector: 'page-new',
-  templateUrl: 'new.html',
+  templateUrl: 'login.html',
 })
-export class NewPage {
+export class LoginPage {
 
   public userNameInput;
   public passwordInput;
@@ -22,7 +22,7 @@ export class NewPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewPage');
+    console.log('ionViewDidLoad LoginPage');
   }
 
   onNewAccountAdded(){
