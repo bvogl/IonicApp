@@ -26,6 +26,7 @@ export class EventParser {
         sinstructor: test["sinstructor"]
       };
 
+
       events.push( event);
     }
 

@@ -3,5 +3,9 @@
   "integrations": {
     "cordova": {}
   },
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "proxies": [{
+    "path": "/api",
+    "proxyUrl": "http://195.37.187.66:8080/StpWebApp/rest/ioniclessons"
+  }]
 }

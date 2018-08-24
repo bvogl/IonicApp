@@ -45,6 +45,7 @@ export class HomePage {
     }
     else {
       var schedule = this.dataService.getLocalSchedule();
+      //this.saveSchedule(schedule);
 
       if (schedule == null)
         this.presentScheduleAlert();
@@ -62,7 +63,6 @@ export class HomePage {
       }
     }
   }
-
 
   onViewTitleChanged(title) {
     this.viewTitle = title;
@@ -87,19 +87,21 @@ export class HomePage {
     this.selectedDay = ev.selectedTime;
   }
 
-loadEvents(){
+loadRemoteEvents(){
+  console.log('loading remote schedule');
+  this._schedule = this.dataService.getRemoteData();
+  this.showSchedule();
+  this.saveSchedule(this._schedule);
+}
 
-  this.eventSource = [];
-
-  var events = this.eventService.parseEvents(this._schedule);
-
-  setTimeout(() => {
-    this.eventSource = events;
-  });
+loadLocalEvents(){
+  console.log('loading local schedule');
+  this._schedule = this.dataService.getLocalSchedule();
+  this.showSchedule();
 }
 
   clearStorage() {
-
+    console.log('clearing schedule');
     window.localStorage.clear()
   }
 
@@ -126,16 +128,19 @@ loadEvents(){
 
   showSchedule() {
     console.log('Showing schedule');
+
+    var remoteData = this.eventService.parseEvents(this._schedule);
+
+    this.eventSource = [];
+
+    setTimeout(() => {
+      this.eventSource = remoteData;
+    });
   }
 
   saveSchedule(schedule) {
-    console.log('Stroring login Schedule locally');
-
-    if (schedule != null) {
+    console.log('Stroring schedule locally');
       window.localStorage.setItem('Array', JSON.stringify(schedule));
-      this.ionViewDidEnter();
-    } else
-      this.presentRemoteAlert();
   }
 
   presentRemoteAlert() {
@@ -167,8 +172,7 @@ loadEvents(){
           text: 'Bestätigen',
           handler: () => {
             console.log('Load clicked');
-            var schedule = this.dataService.getRemoteData();
-            this.saveSchedule(schedule);
+            this.loadRemoteEvents();
           }
         }
       ]
